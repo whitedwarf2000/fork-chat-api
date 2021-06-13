@@ -23,6 +23,8 @@ mongoose.connect(
   }
 );
 
+const PORT = process.env.PORT || 8800;
+
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -41,31 +43,6 @@ app.use("/api/posts", postRoute);
 app.use("/api/conversations", conversationRoute);
 app.use("/api/messages", messageRoute);
 
-const NEW_CHAT_MESSAGE_EVENT = 'newChatMessageEvent';
-
-const io = require('socket.io')(4000, {
-  cors: {
-    origin: '*',
-  },
-});
-io.on('connection', socket => {
-  // eslint-disable-next-line no-console
-  console.log(`Client ${socket.id} connected!`);
-
-  const { conversationId } = socket.handshake.query;
-  socket.join(conversationId);
-
-  socket.on(NEW_CHAT_MESSAGE_EVENT, data => {
-    io.in(conversationId).emit(NEW_CHAT_MESSAGE_EVENT, data);
-  });
-
-  socket.on('disconnect', () => {
-    // eslint-disable-next-line no-console
-    console.log(`Client ${socket.id} disconnected!`);
-    socket.leave(conversationId);
-  });
-});
-
-app.listen(8800, () => {
+app.listen(PORT, () => {
   console.log("Backend server is running!");
 });
