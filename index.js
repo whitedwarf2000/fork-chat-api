@@ -27,7 +27,7 @@ const PORT = process.env.PORT || 8800;
 
 // Allow to test from local
 
-let ALLOWED_ORIGINS = ["https://fork-chat.vercel.app/"];
+let ALLOWED_ORIGINS = ["https://fork-chat.vercel.app"];
 app.use((req, res, next) => {
   let origin = req.headers.origin;
   let theOrigin = (ALLOWED_ORIGINS.indexOf(origin) >= 0) ? origin : ALLOWED_ORIGINS[0];
